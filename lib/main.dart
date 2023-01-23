@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,15 +30,15 @@ class MyAppState extends ChangeNotifier {
     final stopwatch = Stopwatch();
 
   var opacityList = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
-
   void toggleVisible(context, i) {
     if(!opacityList.contains(0.0)) {
       stopwatch.start();
     }
     opacityList[i] = 0.0;
-    if(!opacityList.contains(0.0)) {
+    if(!opacityList.contains(1.0)) {
       stopwatch.stop();
       print(stopwatch.elapsedMilliseconds / 1000.0);
+      Navigator.pushNamed(context, '/score');
     }
     notifyListeners();
   }
@@ -54,7 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
     var appState = context.watch<MyAppState>();
     
     var gridVisible = appState.opacityList;
-
     return Scaffold(
       body: GridView.builder(
         itemCount: 9,
@@ -83,6 +83,28 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+class Score extends StatelessWidget {
+  const Score({super.key});
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    return Scaffold(
+      body: Column(
+        children: [
+          Text('Your time was: '
+          '${appState.stopwatch.elapsedMicroseconds / 1000.0}'
+          'seconds'),
+          ElevatedButton(
+          child: Text('New Game'),
+          onPressed:() {
+            Navigator.pop(context);
+          },
+         ),
+        ],
       ),
     );
   }
