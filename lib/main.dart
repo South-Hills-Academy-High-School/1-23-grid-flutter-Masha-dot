@@ -25,11 +25,11 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MyAppState extends ChangeNotifier {
     final stopwatch = Stopwatch();
 
   var opacityList = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+
   void toggleVisible(context, i) {
     if(!opacityList.contains(0.0)) {
       stopwatch.start();
@@ -40,6 +40,12 @@ class MyAppState extends ChangeNotifier {
       print(stopwatch.elapsedMilliseconds / 1000.0);
       Navigator.pushNamed(context, '/score');
     }
+    notifyListeners();
+  }
+
+  void newGame() {
+    stopwatch.reset();
+    opacityList = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,];
     notifyListeners();
   }
 }
@@ -101,6 +107,7 @@ class Score extends StatelessWidget {
           ElevatedButton(
           child: Text('New Game'),
           onPressed:() {
+            appState.newGame();
             Navigator.pop(context);
           },
          ),
